@@ -1,9 +1,10 @@
 import { Router } from "express";
-import { fetchNBAOdds, createGamePredictor } from "./oddsService";
+import { fetchNBAOdds, createGamePredictor, SPORT_LABEL } from "./oddsService";
 import { oddsToDecimal, realExpectedValue } from "./oddsMath";
 import { FinalData } from "./oddsTypes";
  
 const router = Router();
+
 
 router.get("/", async (_req, res) => {
     try{
@@ -36,7 +37,7 @@ router.get("/", async (_req, res) => {
 
         processed.sort((a,b) => b.ev - a.ev);
         res.json({
-            sport: "NBA",
+            sport: SPORT_LABEL,
             count: processed.length,
             generatedAt: new Date().toISOString(),
             bets: processed,

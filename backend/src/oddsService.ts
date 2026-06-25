@@ -3,7 +3,8 @@ import {Game, GamePredictor} from "./oddsTypes";
 
 const BASE_URL = process.env.ODDS_API_BASE_URL;
 const API_KEY = process.env.ODDS_API_KEY;
-const SPORT_KEY = "basketball_nba";
+const SPORT_KEY = "baseball_mlb";
+export const SPORT_LABEL = "MLB";
 
 export async function fetchNBAOdds():Promise<Game[]>{
     //get response
