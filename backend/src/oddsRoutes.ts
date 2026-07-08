@@ -4,12 +4,22 @@ import { oddsToDecimal, realExpectedValue } from "./oddsMath";
 import { FinalData } from "./oddsTypes";
  
 const router = Router();
-
+const MIN_BOOKS = 6;
 
 router.get("/", async (_req, res) => {
     try{
         const raw = await fetchNBAOdds();
-        const consensus = createGamePredictor(raw);
+
+        const seen = new Map<string, typeof raw[0]>();
+        for (const game of raw) {
+        const key = [game.homeTeam, game.awayTeam].sort().join("_");
+        const existing = seen.get(key);
+        if (!existing || game.bookmakers.length > existing.bookmakers.length) {
+            seen.set(key, game);
+        }
+        }
+        const deduped = Array.from(seen.values());
+        const consensus = createGamePredictor(deduped);
 
         const processed: FinalData[] = consensus.flatMap((game) => {
             if(game.teams.length !== 2) return [];
@@ -19,7 +29,7 @@ router.get("/", async (_req, res) => {
             return [team1,team2].map((team, i) => {
                 const opponent = (i === 0) ? team2 : team1;
                 const odds = oddsToDecimal(team.bestOdds);
-                const value = realExpectedValue(odds, team.noVigProb);
+                const value = realExpectedValue(team.noVigProb, odds);
 
                 return {
                     team: team.team,
@@ -28,7 +38,7 @@ router.get("/", async (_req, res) => {
                     bestOdds: team.bestOdds,
                     bestBook: team.bestBook,
                     ev: value,
-                    bookAmount: game.bookCount,
+                    bookAmount: team.bookAmount,
                     commenceTime: game.commenceTime,
                     gameId: game.id,
                 };
@@ -36,11 +46,13 @@ router.get("/", async (_req, res) => {
         });
 
         processed.sort((a,b) => b.ev - a.ev);
+
+        const filter = processed.filter(b=>b.bookAmount >= MIN_BOOKS);
         res.json({
             sport: SPORT_LABEL,
-            count: processed.length,
+            count: filter.length,
             generatedAt: new Date().toISOString(),
-            bets: processed,
+            bets: filter,
             });
         } catch (err: any) {
             console.error("Odds fetch error:", err.message);
