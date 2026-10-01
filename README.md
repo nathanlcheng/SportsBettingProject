@@ -1,6 +1,6 @@
 # SPORTS BETTING PROJECT
 
-A full-stack sports betting prjoect that calculates the expected value and identifies +EV betting across different bookmakers.
+A full-stack sports betting project that calculates the expected value and identifies +EV betting across different bookmakers.
 
 ## How it works:
 1. Fetches live odds through The Odds API
