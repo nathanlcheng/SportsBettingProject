@@ -1,10 +1,10 @@
-# SPORTS BETTING PROECT
+# SPORTS BETTING PROJECT
 
-A full-stack sports betting proect that calculates the expected value and identifies +EV betting across different bookmakers.
+A full-stack sports betting prjoect that calculates the expected value and identifies +EV betting across different bookmakers.
 
 ## How it works:
 1. Fetches live odds through The Odds API
-2. Removes unreliable books bad data
+2. Removes bookmakers with unreliable data
 3. Filters out outliers to prevent poor results
 4. Calculates the fair probability from the given data
 5. Computes the expected value from the fair probability
@@ -12,7 +12,7 @@ A full-stack sports betting proect that calculates the expected value and identi
 
 ## Tech Stack:
 - Frontend - React, Vite
-- Backend - Node.js, Express, Typescript
+- Backend - Node.js, Express, TypeScript
 - Data/API - The Odds API
 
 ## How to run locally:
@@ -21,7 +21,7 @@ A full-stack sports betting proect that calculates the expected value and identi
 ```
 cd backend
 npm install
-cp .env.exampe .env
+cp .env.example .env
 npm run dev
 ```
 
